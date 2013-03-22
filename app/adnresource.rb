@@ -122,9 +122,12 @@ class ADNResource < RackDAV::Resource
   end
 
   def put(request, response)
+    raise RackDAV::HTTPStatus::Forbidden if request.content_length.to_i == 0
+    raise RackDAV::HTTPStatus::Forbidden if request.content_length.to_i == 1
     filename = CGI.unescape request.path_info.gsub('/', '')
     ctype = request.media_type || MIME::Types.of(filename).map(&:content_type).first
-    @adn.new_file LengthyIO.new(request.body, request.content_length.to_i), ctype, filename, :type => 'com.floatboth.appnetdav.file'
+    rsp = @adn.new_file LengthyIO.new(request.body, request.content_length.to_i), ctype, filename, :type => 'com.floatboth.appnetdav.file'
+    raise RackDAV::HTTPStatus::InsufficientStorage if rsp.status == 507
   end
 
   def move(dest)
