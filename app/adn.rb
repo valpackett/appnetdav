@@ -48,5 +48,3 @@ class ADN
     @api.delete "files/#{id}"
   end
 end
-
-ADN.global = ADN.new ADN_TOKEN
