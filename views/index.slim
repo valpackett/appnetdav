@@ -1,0 +1,35 @@
+.row-fluid
+  .span12
+    h1 WebDAV Settings
+    p
+      | Server: https://#{@host}/dav
+    p
+      | Username: #{@me['id']}
+    h3 Password?
+    p
+      | This works like Google's Application Specific Passwords.
+      |  Create a new password each time you want to use a new WebDAV app.
+    - if @passwords.length > 0
+      h2 Your passwords
+      table.table.table-striped.table-condensed
+        thead
+          tr
+            th Password
+            th
+        tbody
+          - @passwords.each do |k|
+            tr
+              td= k.pwd
+              td
+                a href="/passwords/#{k.id}/delete"
+                  i.icon-remove
+    h2 Create a password
+    form.form-horizontal method="post" action="/passwords"
+      == Rack::Csrf.tag env
+      .control-group
+        label.control-label for="pwd" Password
+        .controls
+          input type="text" name="pwd" required="required" maxlength="128"
+      .form-actions
+        .btn-group
+          button.btn.btn-primary type="submit" Create!

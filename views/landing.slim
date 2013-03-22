@@ -1,0 +1,7 @@
+.hero-unit
+  h1 AppnetDAV
+  h2 A WebDAV proxy for App.net file storage (supports Readdle Documents, iWork for iOS...)
+  p
+    form method="post" action="/auth/appdotnet"
+      == Rack::Csrf.tag env
+      button.btn.btn-primary.btn-large type="submit" Log in

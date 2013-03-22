@@ -1,0 +1,39 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width"
+    title AppnetDAV
+    link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700"
+    link rel="stylesheet" href="/css/bootstrap.min.css"
+    css:
+      [class^="icon-"] { vertical-align: -2px; }
+      #footer { margin-top: 6em; }
+  body
+    .navbar.navbar-static-top
+      .navbar-inner
+        .container
+          a.brand href="/" AppnetDAV
+          - if @me.nil?
+            form.navbar-form.pull-right method="post" action="/auth/appdotnet"
+              == Rack::Csrf.tag env
+              button.btn type="submit" Log in
+          - else
+            ul.nav.pull-right
+              li
+                a href="/auth/logout" Log out
+    .container
+      - [:success, :error, :info].each do |type|
+        - alert = flash[type]
+        - unless alert.nil?
+          div class="alert alert-#{type.to_s}"
+            button.close type="button" data-dismiss="alert" ×
+            = alert
+      == yield
+      .well#footer
+        | a 
+        a href="http://floatboth.com" { float: both }
+        |  production | 
+        a href="http://supportappnet.herokuapp.com/appnetdav" Support
+    script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"
+    script src="/js/bootstrap.min.js"
