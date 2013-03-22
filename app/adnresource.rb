@@ -64,6 +64,8 @@ class ADNResource < RackDAV::Resource
       f = @files.select { |f| '/dav/' + f['name'] == upath }
       @file = @adn.get_file(f.first['id']).body['data'] unless f.empty?
     end
+  rescue NoMethodError => e
+    raise RackDAV::HTTPStatus::InternalServerError
   end
 
   def children
