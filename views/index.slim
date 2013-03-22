@@ -2,9 +2,11 @@
   .span12
     h1 WebDAV Settings
     p
-      | Server: https://#{@host}/dav
+      | Server: 
+      strong https://#{@host}/dav
     p
-      | Username: #{@me['id']}
+      | Login: 
+      strong= @me['id']
     h3 Password?
     p
       | This works like Google's Application Specific Passwords.
