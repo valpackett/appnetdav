@@ -19,7 +19,7 @@ class AppnetDAV < Sinatra::Base
   register Sinatra::Flash
 
   configure :production do
-    # require 'newrelic_rpm'
+    require 'newrelic_rpm'
     use Rack::SslEnforcer
   end
   use Rack::Session::Cookie, :secret => settings.session_secret

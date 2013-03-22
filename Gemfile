@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # serving
-gem "thin"
+gem "rainbows"
 gem "rack_dav"
 gem "rack_csrf"
 gem "rack-ssl-enforcer"
@@ -36,5 +36,5 @@ group :development, :test do
 end
 
 group :production do
-  # gem "newrelic_rpm"
+  gem "newrelic_rpm"
 end
