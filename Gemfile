@@ -28,6 +28,7 @@ gem "bson_ext", "1.6.0"
 # etc
 gem "oj"
 gem "mime-types"
+gem "sentry-raven"
 
 group :development, :test do
   gem "rspec"

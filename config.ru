@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'rack/fiber_pool'
 require 'rack/raw_upload'
+require 'raven'
 require './app/adnresource.rb'
 require './app/app.rb'
 
@@ -13,8 +14,8 @@ module Rack
 end
 
 use Rack::FiberPool
+use Raven::Rack
 use Rack::CommonLogger
-use Rack::ShowExceptions
 
 map "/dav" do
   use Rack::RawUpload
