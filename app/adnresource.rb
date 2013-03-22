@@ -1,3 +1,4 @@
+require 'open-uri'
 require 'rack_dav'
 require 'mime/types'
 require_relative 'adn.rb'
@@ -46,9 +47,14 @@ class ADNResource < RackDAV::Resource
       response.headers['WWW-Authenticate'] = 'Basic realm="AppnetDAV"'
       raise RackDAV::HTTPStatus::Unauthorized
     end
-    pwd = PasswordRepository.find_by_owner_adn_id a.credentials[0]
+    username, password = a.credentials
+    if username.include? '+redirect'
+      username = username.gsub '+redirect', ''
+      @options[:redirect] = true
+    end
+    pwd = PasswordRepository.find_by_owner_adn_id username
     raise RackDAV::HTTPStatus::Forbidden if pwd.empty?
-    raise RackDAV::HTTPStatus::Forbidden if a.credentials[1] != pwd.first.pwd
+    raise RackDAV::HTTPStatus::Forbidden if password != pwd.first.pwd
     @adn = ADN.new pwd.first.key
     @files = @adn.get_my_files.body['data']
     if root? || request.put?
@@ -116,9 +122,13 @@ class ADNResource < RackDAV::Resource
   end
 
   def get(request, response)
-    response.headers['Location'] = @file['url']
-    response.headers['Content-Length'] = [0]
-    raise RackDAV::HTTPStatus::SeeOther
+    if @options[:redirect]
+      response.headers['Location'] = @file['url']
+      response.headers['Content-Length'] = [0]
+      raise RackDAV::HTTPStatus::SeeOther
+    else
+      response.body = open(@file['url'])
+    end
   end
 
   def put(request, response)

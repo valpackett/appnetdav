@@ -1,4 +1,4 @@
-source :rubygems
+source 'https://rubygems.org'
 
 # serving
 gem "thin"
