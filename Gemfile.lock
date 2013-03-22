@@ -54,7 +54,6 @@ GEM
       bson (= 1.6.0)
     multi_json (1.7.2)
     multipart-post (1.2.0)
-    newrelic_rpm (3.6.0.78)
     nokogiri (1.5.9)
     oauth2 (0.8.1)
       faraday (~> 0.8)
@@ -131,7 +130,6 @@ DEPENDENCIES
   faraday_middleware
   mime-types
   mongo (= 1.6.0)
-  newrelic_rpm
   oj
   omniauth
   omniauth-appdotnet
