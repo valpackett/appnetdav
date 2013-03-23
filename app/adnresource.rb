@@ -57,6 +57,8 @@ class ADNResource < RackDAV::Resource
     raise RackDAV::HTTPStatus::Forbidden if password != pwd.first.pwd
     @adn = ADN.new pwd.first.key
     files_rsp = @adn.get_my_files
+    puts "Request Body: #{request.body.read}"
+    request.body.rewind
     puts "ADN Files response: #{files_rsp.status}: #{files_rsp.body}"
     @files = files_rsp.body['data']
     if root? || request.put?
