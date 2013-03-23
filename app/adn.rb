@@ -32,8 +32,8 @@ class ADN
     @api.post 'files', params
   end
 
-  def get_my_files
-    @api.get 'users/me/files'
+  def get_my_files(params={:include_incomplete => 0})
+    @api.get 'users/me/files', params
   end
 
   def get_file(id)

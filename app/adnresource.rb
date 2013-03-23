@@ -41,12 +41,11 @@ class ADNResource < RackDAV::Resource
     if @request.env['HTTP_USER_AGENT'].include? 'redirect'
       @options[:redirect] = true
     end
-    puts "PATH >>#{path}<< FILE >>#{@file}<< ROOT >>#{root?}<<"
   end
 
   def get_file
     if root? || @request.put?
-      @file = {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
+      @file = {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0, 'created_at' => ''}
     else
       upath = CGI.unescape path
       f = Option(@files.find { |f| '/dav/' + f['name'] == upath })
