@@ -33,6 +33,10 @@ class AppnetDAV < Sinatra::Base
     @me = @adn.me unless session[:token].nil?
   end
 
+  not_found do
+    slim :not_found
+  end
+
   get '/auth/appdotnet/callback' do
     session[:token] = request.env['omniauth.auth']['credentials']['token']
     redirect request.env['omniauth.origin'] || '/'
