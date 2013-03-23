@@ -67,7 +67,7 @@ class ADNResource < RackDAV::Resource
   end
 
   def children
-    (root? && @files) ? @files.map { |f| child f['name'] } : []
+    root? ? @files.map { |f| child f['name'] } : []
   end
 
   def root?
