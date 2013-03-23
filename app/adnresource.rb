@@ -56,7 +56,9 @@ class ADNResource < RackDAV::Resource
     raise RackDAV::HTTPStatus::Forbidden if pwd.empty?
     raise RackDAV::HTTPStatus::Forbidden if password != pwd.first.pwd
     @adn = ADN.new pwd.first.key
-    @files = @adn.get_my_files.body['data']
+    files_rsp = @adn.get_my_files
+    p files_rsp
+    @files = files_rsp.body['data']
     if root? || request.put?
       @file = {'sha1' => 'aaa', 'mime_type' => 'text/html', 'size' => 0}
     else
