@@ -35,10 +35,9 @@ class ADNResource < RackDAV::Resource
     @options = options
     @request = request
     @response = response
-    authenticate
+    @adn = authenticate
     @files = @adn.get_my_files.body['data']
-    @file = {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
-    get_file
+    @file = get_file
   end
 
   def authenticate
@@ -54,19 +53,25 @@ class ADNResource < RackDAV::Resource
     end
     pwd = PasswordRepository.find_by_owner_adn_id(username).first
     raise RackDAV::HTTPStatus::Forbidden if pwd.nil? || password != pwd.pwd
-    @adn = ADN.new pwd.key
+    ADN.new pwd.key
   end
 
   def get_file
-    unless root? || @request.put?
+    if root? || @request.put?
+      {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
+    else
       upath = CGI.unescape path
       f = Option(@files.find { |f| '/dav/' + f['name'] == upath })
-      @file = @adn.get_file(f.get['id']).body['data'] unless f.empty?
+      @adn.get_file(f.get['id']).body['data'] unless f.empty?
     end
   end
 
   def children
-    root? ? @files.map { |f| child f['name'] } : []
+    if root?
+      @files.map { |f| child f['name'] }
+    else
+      []
+    end
   end
 
   def root?
@@ -78,7 +83,11 @@ class ADNResource < RackDAV::Resource
   end
 
   def creation_date
-    root? ? DateTime.now : DateTime.parse(@file['created_at'])
+    if root?
+      DateTime.now
+    else
+      DateTime.parse @file['created_at']
+    end
   end
 
   def last_modified
@@ -93,7 +102,7 @@ class ADNResource < RackDAV::Resource
   end
 
   def exist?
-    @file || root?
+    !@file.nil?
   end
 
   def content_type
