@@ -3,6 +3,7 @@ require 'rack_dav'
 require 'mime/types'
 require_relative 'adn.rb'
 require_relative 'models.rb'
+require_relative 'monkey.rb'
 
 module RackDAV
   class Controller
@@ -56,11 +57,7 @@ class ADNResource < RackDAV::Resource
     raise RackDAV::HTTPStatus::Forbidden if pwd.empty?
     raise RackDAV::HTTPStatus::Forbidden if password != pwd.first.pwd
     @adn = ADN.new pwd.first.key
-    files_rsp = @adn.get_my_files
-    puts "Request Body: #{request.body.read}"
-    request.body.rewind
-    puts "ADN Files response: #{files_rsp.status}: #{files_rsp.body}"
-    @files = files_rsp.body['data']
+    @files = @adn.get_my_files.body['data']
     if root? || request.put?
       @file = {'sha1' => 'aaa', 'mime_type' => 'text/html', 'size' => 0}
     else
@@ -68,8 +65,6 @@ class ADNResource < RackDAV::Resource
       f = @files.select { |f| '/dav/' + f['name'] == upath }
       @file = @adn.get_file(f.first['id']).body['data'] unless f.empty?
     end
-  rescue NoMethodError => e
-    raise RackDAV::HTTPStatus::InternalServerError
   end
 
   def children
