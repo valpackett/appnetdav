@@ -30,14 +30,22 @@ module RackDAV
 end
 
 class ADNResource < RackDAV::Resource
-  def initialize(path, options, request, response, files)
+  def initialize(path, options, request, response, files=nil)
     @path = path
     @options = options
     @request = request
     @response = response
     @adn = authenticate
-    @files = @adn.get_my_files.body['data']
-    if @path == '/dav' || @path == '/dav/' || @request.put?
+    @files = files || @adn.get_my_files.body['data']
+    @file = get_file
+    if @request.env['HTTP_USER_AGENT'].include? 'redirect'
+      @options[:redirect] = true
+    end
+    puts "PATH >>#{path}<< FILE >>#{@file}<< ROOT >>#{root?}<<"
+  end
+
+  def get_file
+    if root? || @request.put?
       @file = {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
     else
       upath = CGI.unescape path
@@ -64,7 +72,7 @@ class ADNResource < RackDAV::Resource
 
   def children
     if root?
-      @files.map { |f| child f['name'] }
+      @files.map { |f| child f['name'] unless f['name'] == '' }
     else
       []
     end
