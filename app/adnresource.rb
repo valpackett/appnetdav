@@ -35,9 +35,10 @@ class ADNResource < RackDAV::Resource
     @options = options
     @request = request
     @response = response
-    @adn = authenticate
+    authenticate
     @files = @adn.get_my_files.body['data']
-    @file = get_file
+    @file = {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
+    get_file
   end
 
   def authenticate
@@ -53,17 +54,14 @@ class ADNResource < RackDAV::Resource
     end
     pwd = PasswordRepository.find_by_owner_adn_id(username).first
     raise RackDAV::HTTPStatus::Forbidden if pwd.nil? || password != pwd.pwd
-    ADN.new pwd.key
+    @adn = ADN.new pwd.key
   end
 
   def get_file
-    if root? || @request.put?
-      p "IS ROOT OR PUT"
-      {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
-    else
+    unless root? || @request.put?
       upath = CGI.unescape path
       f = Option(@files.find { |f| '/dav/' + f['name'] == upath })
-      @adn.get_file(f.get['id']).body['data'] unless f.empty?
+      @file = @adn.get_file(f.get['id']).body['data'] unless f.empty?
     end
   end
 
@@ -103,7 +101,6 @@ class ADNResource < RackDAV::Resource
   end
 
   def content_length
-    p @file
     @file['size']
   end
 
