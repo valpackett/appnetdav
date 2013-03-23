@@ -37,7 +37,6 @@ class ADNResource < RackDAV::Resource
     @response = response
     @adn = authenticate
     @files = @adn.get_my_files.body['data']
-    @file = get_file
     if @path == '/dav' || @path == '/dav/' || @request.put?
       @file = {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
     else
