@@ -38,6 +38,13 @@ class ADNResource < RackDAV::Resource
     @adn = authenticate
     @files = @adn.get_my_files.body['data']
     @file = get_file
+    if @path == '/dav' || @path == '/dav/' || @request.put?
+      @file = {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
+    else
+      upath = CGI.unescape path
+      f = Option(@files.find { |f| '/dav/' + f['name'] == upath })
+      @file = @adn.get_file(f.get['id']).body['data'] unless f.empty?
+    end
   end
 
   def authenticate
@@ -54,16 +61,6 @@ class ADNResource < RackDAV::Resource
     pwd = PasswordRepository.find_by_owner_adn_id(username).first
     raise RackDAV::HTTPStatus::Forbidden if pwd.nil? || password != pwd.pwd
     ADN.new pwd.key
-  end
-
-  def get_file
-    if root? || @request.put?
-      {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0}
-    else
-      upath = CGI.unescape path
-      f = Option(@files.find { |f| '/dav/' + f['name'] == upath })
-      @adn.get_file(f.get['id']).body['data'] unless f.empty?
-    end
   end
 
   def children
