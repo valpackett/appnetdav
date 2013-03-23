@@ -8,11 +8,11 @@ require 'slim'
 require 'multi_json'
 require_relative 'adn.rb'
 require_relative 'models.rb'
+require_relative 'monkey.rb'
 
 class AppnetDAV < Sinatra::Base
   set :session_secret, SESSION_SECRET
   set :server, :thin
-  set :markdown, :layout_engine => :slim
   set :views, File.join(File.dirname(__FILE__), '..', 'views')
   set :public_folder, File.join(File.dirname(__FILE__), '..', 'public')
 

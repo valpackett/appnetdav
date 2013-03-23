@@ -29,6 +29,7 @@ gem "bson_ext", "1.6.0"
 gem "oj"
 gem "mime-types"
 gem "sentry-raven"
+gem "rumonade"
 
 group :development, :test do
   gem "rspec"

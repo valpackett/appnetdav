@@ -12,7 +12,7 @@ else
 end
 
 Curator.configure(:mongo) do |config|
-  config.environment = "development"
+  config.environment = ENV['RACK_ENV'] || 'development'
   config.client      = conn
   config.database    = db
   config.migrations_path = File.expand_path(File.dirname(__FILE__) + "../migrations")
