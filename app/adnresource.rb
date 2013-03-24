@@ -48,7 +48,7 @@ class ADNResource < RackDAV::Resource
       {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0, 'created_at' => ''}
     else
       upath = CGI.unescape path
-r     f = Option(@files.find { |f| '/dav/' + CGI.unescape(f['name']) == upath })
+r     f = Option(@files.find { |f| '/dav/' + f['name'] == upath })
       if f.empty?
         {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0,
          'created_at' => DateTime.now.to_s, 'url' => 'about:blank', 'id' => '0'}
