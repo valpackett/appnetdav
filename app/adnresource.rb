@@ -38,7 +38,7 @@ class ADNResource < RackDAV::Resource
     @adn = authenticate
     @files = files || @adn.get_my_files.body['data']
     @file = get_file
-    if @request.env['HTTP_USER_AGENT'].include? 'redirect'
+    if Option(@request.env['HTTP_USER_AGENT']).get_or_else('').include? 'Readdle'
       @options[:redirect] = true
     end
   end
