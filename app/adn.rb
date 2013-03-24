@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'em-synchrony'
 require 'faraday'
 require 'faraday_middleware'
+require 'faraday_middleware/multi_json'
 require_relative 'const'
 
 class ADN
@@ -13,8 +14,8 @@ class ADN
     @api = Faraday.new(:url => 'https://alpha-api.app.net/stream/0/') do |adn|
       adn.request  :authorization, 'Bearer', token
       adn.request  :multipart
-      adn.request  :json
-      adn.response :json, :content_type => /\bjson$/
+      adn.request  :multi_json
+      adn.response :multi_json
       adn.adapter  :em_synchrony
     end
   end

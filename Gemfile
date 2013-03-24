@@ -17,6 +17,7 @@ gem "em-http-request"
 gem "em-synchrony"
 gem "faraday"
 gem "faraday_middleware"
+gem "faraday_middleware-multi_json"
 gem "omniauth"
 gem "omniauth-appdotnet"
 
