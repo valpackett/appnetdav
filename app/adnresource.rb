@@ -45,11 +45,16 @@ class ADNResource < RackDAV::Resource
 
   def get_file
     if root? || @request.put?
-      @file = {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0, 'created_at' => ''}
+      {'sha1' => 'hello', 'mime_type' => 'text/plain', 'size' => 0, 'created_at' => ''}
     else
       upath = CGI.unescape path
       f = Option(@files.find { |f| '/dav/' + f['name'] == upath })
-      @file = @adn.get_file(f.get['id']).body['data'] unless f.empty?
+      if f.empty?
+        puts "Empty File! #{upath}"
+        p @files
+      else
+        @adn.get_file(f.get['id']).body['data']
+      end
     end
   end
 
