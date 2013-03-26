@@ -13,6 +13,10 @@ module Rack
   end
 end
 
+Raven.configure do |config|
+  config.excluded_exceptions = ['Sinatra::NotFound']
+end
+
 use Rack::FiberPool
 use Raven::Rack
 use Rack::CommonLogger
