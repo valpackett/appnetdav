@@ -66,8 +66,8 @@ class AppnetDAV < Sinatra::Base
 
   get '/passwords/:id/delete' do
     pwd = PasswordRepository.find_by_id params[:id]
-    halt 404 unless pwd.owner_adn_id == @me['id']
     halt 404 unless pwd
+    halt 404 unless pwd.owner_adn_id == @me['id']
     PasswordRepository.delete pwd
     flash[:message] = 'Successfully deleted a password.'
     redirect '/'
