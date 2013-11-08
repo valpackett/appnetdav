@@ -76,7 +76,7 @@ class ADNResource < RackDAV::Resource
   end
 
   def children
-    if root?
+    if root? && @files
       @files.map { |f| c = child f['name'] }
     else
       []
